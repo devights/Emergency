@@ -21,18 +21,20 @@ sub _buildTree {
 
     my $tree = HTML::TreeBuilder->new_from_content($response);
     my $table = $tree->look_down("bgcolor", "#FFFFFF", "cellpadding", "2");
-    my @incidents = $table->look_down("_tag", "tr");
-    foreach my $incident (@incidents){
-        my $time = $incident->look_down("_tag", "td", "width", "16%")->as_text();
-        my $id = $incident->look_down("_tag", "td", "width", "10%")->as_text();
-        my $level = $incident->look_down("_tag", "td", "width", "7%")->as_text();
-        my $units = $incident->look_down("_tag", "td", "width", "17%")->as_text();
-        my $location = $incident->look_down("_tag", "td", "width", "36%")->as_text();
-        my $type = $incident->look_down("_tag", "td", "width", "14%")->as_text();
-        my $is_active =  $incident->look_down("_tag", "td", "width", "16%")->attr('class') eq "active" ? 1 : 0;
-
-print "time: $time  id: $id  level:  $level  units: $units  location: $location   type $type   is_active: $is_active\n";
+    my @raw_incidents = $table->look_down("_tag", "tr");
+    my @incidents;
+    foreach my $incident (@raw_incidents){
+        my $hash = {};
+        $hash->{'time'} = $incident->look_down("_tag", "td", "width", "16%")->as_text();
+        $hash->{'id'} = $incident->look_down("_tag", "td", "width", "10%")->as_text();
+        $hash->{'level'} = $incident->look_down("_tag", "td", "width", "7%")->as_text();
+        $hash->{'units'} = $incident->look_down("_tag", "td", "width", "17%")->as_text();
+        $hash->{'location'} = $incident->look_down("_tag", "td", "width", "36%")->as_text();
+        $hash->{'type'} = $incident->look_down("_tag", "td", "width", "14%")->as_text();
+        $hash->{'is_active'} =  $incident->look_down("_tag", "td", "width", "16%")->attr('class') eq "active" ? 1 : 0;
+        push(@incidents, $hash);
     }
+    return \@incidents;
 }
 
 sub _scrapePage {
