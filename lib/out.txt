@@ -1,0 +1,9 @@
+time: 2/8/2012 12:59:32 AM  id: F120011899  level:  1  units: E31 M31  location: 11050 8th Av Ne   type Medic Response   is_active: 1
+time: 2/8/2012 12:41:21 AM  id: F120011897  level:  1  units: E29  location: 2614 42nd Av Sw   type Aid Response   is_active: 0
+time: 2/8/2012 12:35:22 AM  id: F120011896  level:  1  units: A25  location: Broadway E / E Olive Way   type Aid Response   is_active: 0
+time: 2/8/2012 12:26:07 AM  id: F120011894  level:  1  units: E37  location: 6339 34th Av Sw   type Aid Response   is_active: 0
+time: 2/8/2012 12:25:52 AM  id: F120011893  level:  1  units: E20  location: 4025 13th Av W   type Aid Response   is_active: 0
+time: 2/8/2012 12:24:02 AM  id: F120011892  level:  1  units: E26  location: 9200 2nd Av Sw   type Aid Response   is_active: 0
+time: 2/8/2012 12:17:35 AM  id: F120011891  level:  1  units: E17 M18  location: 4522 18th Av Ne   type Medic Response   is_active: 0
+time: 2/8/2012 12:10:13 AM  id: F120011890  level:  1  units: E18  location: 6012 6th Av Nw   type Aid Response   is_active: 0
+time: 2/8/2012 12:00:12 AM  id: F120011888  level:  1  units: E38 M16  location: 6559 36th Av Ne   type Medic Response   is_active: 0
