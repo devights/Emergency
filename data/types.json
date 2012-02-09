@@ -1,0 +1,11 @@
+{
+    "Aid Response"	     :    "AID",
+    "Medic Response"  	     :	  "MED",
+    "Auto Fire Alarm"        :	  "AFA",
+    "Motor Vehicle Accident" :    "MVA",
+    "Automatic Fire Alarm Resd" : "AFAR",
+    "Rescue Elevator"	     :	  "ELE",
+    "Aid Response Yellow"    :	  "AIDY",
+    "Automatic Medical Alarm":	  "AMA",
+    "Food On The Stove"      :	  "FOS"
+} 
