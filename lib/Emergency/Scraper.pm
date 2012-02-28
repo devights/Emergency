@@ -5,8 +5,6 @@ use warnings;
 use WWW::Curl::Easy;
 use HTML::TreeBuilder;
 
-use Data::Dumper;
-
 sub new {
     my $proto = shift; 
     my $class = ref($proto) || $proto;
