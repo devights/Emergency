@@ -19,14 +19,13 @@ sub initFromHash {
     my $self = shift;
     my $hash = shift;
     
-    my $time = $self->parseTime($hash->{'time'});
-    my $id = $hash->{'id'};
-    my $location = $self->parseLocation($hash->{'location'});
-    my $units = $self->parseUnits($hash->{'units'});
-    my $level = $hash->{'level'};
-    my $type = $self->parseType($hash->{'type'});
-    my $is_active = $hash->{'is_active'};
-    
+    $self->{'time'} = $self->parseTime($hash->{'time'});
+    $self->{'id'} = $hash->{'id'};
+    $self->{'location'} = $self->parseLocation($hash->{'location'});
+    $self->{'units'} = $self->parseUnits($hash->{'units'});
+    $self->{'level'} = $hash->{'level'};
+    $self->{'type'} = $self->parseType($hash->{'type'});
+    $self->{'active'} = $hash->{'is_active'};
 }
 
 sub parseUnits {
@@ -57,9 +56,20 @@ sub parseType {
 sub parseTime {
     my $self = shift;
     my $raw_time = shift;
-    my $time;
 
-    return $time;
+    (my $date, my $time, my $period) = split(/\s/, $raw_time);
+    (my $month, my $day, my $year) = split(/\//, $date);
+    (my $hour, my $minute, my $second) = split(/:/, $time);
+    
+    my $datetime->{'day'} = $day;
+    $datetime->{'month'} = $month;
+    $datetime->{'year'} = $year;
+    $datetime->{'hour'} = $hour;
+    $datetime->{'minite'} = $minute;
+    $datetime->{'second'} = $second;
+    $datetime->{'period'} = $period;
+
+    return $datetime;
 }
     
 1;

@@ -13,7 +13,7 @@ sub new {
     return $self;
 }
 
-sub _buildTree {
+sub buildTree {
     my $self = shift;
     my $response = $self->_scrapePage();
 
@@ -30,7 +30,9 @@ sub _buildTree {
         $hash->{'location'} = $incident->look_down("_tag", "td", "width", "36%")->as_text();
         $hash->{'type'} = $incident->look_down("_tag", "td", "width", "14%")->as_text();
         $hash->{'is_active'} =  $incident->look_down("_tag", "td", "width", "16%")->attr('class') eq "active" ? 1 : 0;
-        push(@incidents, $hash);
+	my $model =  Emergency::Model::Incident->new();
+	$model->initFromHash($hash);
+        push(@incidents, $model);
     }
     return \@incidents;
 }
