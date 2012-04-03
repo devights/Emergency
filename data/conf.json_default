@@ -1,8 +1,9 @@
 {
-	"database" : {
-			"server" : "localhost",
-			"user"	 : "username",
-			"pass"	 : "password",
-			"database":"Emergency"
-		      }
-}
+    "database": {
+        "server"    : "localhost",
+        "user"      : "username",
+        "pass"      : "password",
+        "database"  : "Emergency"
+    },
+    "data_root" : "/path/to/data/root"
+}  

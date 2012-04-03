@@ -1,8 +1,8 @@
-
 package Emergency::Model::Incident;
 use strict;
 use warnings;
-use Date::Calc qw(Parse_Date);
+use Emergency::Configure;
+use Emergency::DateTime;
 use File::Slurp;
 use JSON::XS;
 
@@ -47,7 +47,8 @@ sub parseType {
     my $self = shift;
     my $type_string = shift;
     
-    my $types = read_file("/home/devights/Emergency/data/types.json");
+    my $conf = Emergency::Configure->new();
+    my $types = read_file($conf->getDataRoot()."/types.json");
     my $json = decode_json $types;
     my $type_code = $json->{$type_string};
     return $type_code ? $type_code : '---';
@@ -61,14 +62,10 @@ sub parseTime {
     (my $month, my $day, my $year) = split(/\//, $date);
     (my $hour, my $minute, my $second) = split(/:/, $time);
     
-    my $datetime->{'day'} = $day;
-    $datetime->{'month'} = $month;
-    $datetime->{'year'} = $year;
-    $datetime->{'hour'} = $hour;
-    $datetime->{'minite'} = $minute;
-    $datetime->{'second'} = $second;
-    $datetime->{'period'} = $period;
-
+    my $datetime = Emergency::DateTime->new();
+    $datetime->setTime($hour, $minute, $second, $period);
+    $datetime->setDate($year, $month, $day);
+    
     return $datetime;
 }
     
