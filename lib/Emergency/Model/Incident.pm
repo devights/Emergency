@@ -75,7 +75,7 @@ sub store {
     my $self = shift;
 
     my @vehicles = @{ $self->{'units'} };
-    my $type_id  = $self->getTypeID();
+    my $type_id  = $self->{'type'};
     my $db       = Emergency::Database->new();
 
     my $insert_placeholder;
@@ -83,14 +83,31 @@ sub store {
         $insert_placeholder .= "(?),";
     }
     chop $insert_placeholder;
+
+    #V1 Ignores vehicle type
     $db->query(
 "INSERT IGNORE INTO Emergency.Vehicle (`name`) VALUES $insert_placeholder",
         @vehicles
     );
 
+    #V1 Ignores "name"
+    $db->query( "INSERT IGNORE INTO Emergency.IncidentType (`id`) VALUES (?)",
+        $type_id );
+
+    my @dispatch;
+    $insert_placeholder = '';
+    foreach my $vehicle (@vehicles) {
+        push @dispatch, $vehicle, $self->{'id'};
+        $insert_placeholder .= "(?, ?),";
+    }
+    chop $insert_placeholder;
+    $db->query(
+"INSERT IGNORE INTO Emergency.Dispatch (`vehicle_id`, `incident_id`) VALUES $insert_placeholder",
+        @dispatch
+    );
+    $db->query(
+"INSERT IGNORE INTO Emergency.Incident (`id`, `location`, `type_id`, `level`) VALUES (?, ?, ?, ?)",
+        $self->{'id'}, $self->{'location'}, $type_id, $self->{'level'} );
 }
 
-sub getTypeID {
-    my $self = shift;
-}
 1;

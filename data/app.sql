@@ -9,15 +9,14 @@ CREATE TABLE Incident (
 ); 
 
 CREATE TABLE Vehicle (
-	id INT AUTO_INCREMENT,
 	name VARCHAR(8) NOT NULL,
 	type_id INT,
-	PRIMARY KEY (id)
+	PRIMARY KEY (name)
 );
 
 CREATE TABLE IncidentType (
-	id INT AUTO_INCREMENT,
-	name TINYTEXT NOT NULL,
+	id INT(11) NOT NULL AUTO_INCREMENT,
+	name TINYTEXT NULL,
 	PRIMARY KEY (id)
 );
 
