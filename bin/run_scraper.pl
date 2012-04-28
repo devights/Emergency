@@ -6,14 +6,15 @@ use Emergency::Model::Incident;
 use strict;
 use warnings;
 
-use Data::Dumper;
+my $scraper;
+my @res;
 
-my $scraper = Emergency::Scraper->new();
+eval { $scraper = Emergency::Scraper->new(); };
+warn $@ if $@;
 
-my @res = @{$scraper->buildTree()};
+eval { @res = @{ $scraper->buildTree() }; };
+warn $@ if $@;
 
-
-
-foreach my $incident (@res){
+foreach my $incident (@res) {
     $incident->store;
 }

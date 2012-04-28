@@ -60,4 +60,11 @@ sub getLastInsertID {
     my $self = shift;
     return $self->{'insert_id'};
 }
+
+sub rowCount {
+    my $self = shift;
+    
+    return if !defined $self->{'read_cursor'};
+    return $self->{'read_cursor'}->rows();
+}
 1;

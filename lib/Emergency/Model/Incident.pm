@@ -7,8 +7,6 @@ use Emergency::Database;
 use File::Slurp;
 use JSON::XS;
 
-use Data::Dumper;
-
 sub new {
     my $proto = shift;
     my $class = ref($proto) || $proto;
@@ -75,39 +73,63 @@ sub store {
     my $self = shift;
 
     my @vehicles = @{ $self->{'units'} };
-    my $type_id  = $self->{'type'};
+    my $type     = $self->{'type'};
     my $db       = Emergency::Database->new();
 
-    my $insert_placeholder;
-    foreach (@vehicles) {
-        $insert_placeholder .= "(?),";
-    }
-    chop $insert_placeholder;
+    if ( $self->{'active'} ) {
+        my $insert_placeholder;
+        foreach (@vehicles) {
+            $insert_placeholder .= "(?),";
+        }
+        chop $insert_placeholder;
 
-    #V1 Ignores vehicle type
-    $db->query(
+        #V1 Ignores vehicle type
+        $db->query(
 "INSERT IGNORE INTO Emergency.Vehicle (`name`) VALUES $insert_placeholder",
-        @vehicles
-    );
+            @vehicles
+        );
 
-    #V1 Ignores "name"
-    $db->query( "INSERT IGNORE INTO Emergency.IncidentType (`id`) VALUES (?)",
-        $type_id );
+        my $type_id;
+        $db->query( "SELECT * FROM Emergency.IncidentType WHERE name = ?",
+            $type );
 
-    my @dispatch;
-    $insert_placeholder = '';
-    foreach my $vehicle (@vehicles) {
-        push @dispatch, $vehicle, $self->{'id'};
-        $insert_placeholder .= "(?, ?),";
+        if ( !$db->rowCount() > 0 ) {
+            $db->query(
+                "INSERT INTO Emergency.IncidentType (`name`) VALUES (?)",
+                $type );
+            $type_id = $db->getLastInsertID();
+        }
+        else {
+            $type_id = $db->getRow()->{'id'};
+        }
+
+        my @dispatch;
+        $insert_placeholder = '';
+        foreach my $vehicle (@vehicles) {
+            push @dispatch, $vehicle, $self->{'id'},
+              $self->{'time'}->toSQL();
+            $insert_placeholder .= "(?, ?, ?),";
+        }
+        chop $insert_placeholder;
+        $db->query(
+"INSERT IGNORE INTO Emergency.Dispatch (`vehicle_id`, `incident_id`, `time`) VALUES $insert_placeholder",
+            @dispatch
+        );
+        $db->query(
+"INSERT IGNORE INTO Emergency.Incident (`id`, `location`, `type_id`, `level`, `start`) VALUES (?, ?, ?, ?, ?)",
+            $self->{'id'}, $self->{'location'}, $type_id, $self->{'level'},
+            $self->{'time'}->toSQL() );
     }
-    chop $insert_placeholder;
-    $db->query(
-"INSERT IGNORE INTO Emergency.Dispatch (`vehicle_id`, `incident_id`) VALUES $insert_placeholder",
-        @dispatch
-    );
-    $db->query(
-"INSERT IGNORE INTO Emergency.Incident (`id`, `location`, `type_id`, `level`) VALUES (?, ?, ?, ?)",
-        $self->{'id'}, $self->{'location'}, $type_id, $self->{'level'} );
+    else {
+        $db->query(
+            "SELECT id from Emergency.Incident WHERE id = ? && end IS NULL",
+            $self->{'id'} );
+        if ( $db->rowCount() > 0 ) {
+            $db->query(
+                "UPDATE Emergency.Incident set end = NOW() WHERE id = ?",
+                $self->{'id'} );
+        }
+    }
 }
 
 1;
