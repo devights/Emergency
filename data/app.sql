@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS `Assignment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Assignment` (
-  `vehicle_id` int(11) NOT NULL,
+  `vehicle_id` varchar(8) NOT NULL,
   `station_id` int(11) NOT NULL,
   PRIMARY KEY (`vehicle_id`,`station_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -25,6 +25,24 @@ CREATE TABLE `Dispatch` (
   `incident_id` char(10) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`vehicle_id`,`incident_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `GeoCache`
+--
+DROP TABLE IF EXISTS `GeoCache`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `GeoCache` (
+  `address` varchar(255) NOT NULL,
+  `lat` char(10) NOT NULL,
+  `lon` char(12) NOT NULL,
+  `verified` enum('Y','N') NOT NULL DEFAULT 'N',
+  `accuracy` enum('APPROXIMATE','Exact','GEOMETRIC_CENTER','RANGE_INTERPOLATED','ROOFTOP','Unknown','USPS') NOT NULL DEFAULT 'Unknown',
+  `matched_component` enum('','administrative_area_level_1','administrative_area_level_2','administrative_area_level_3','airport','colloquial_area','intersection','locality','natural_feature','neighborhood','park','point_of_interest','political','postal_code','route','street_address','sublocality','subpremise') DEFAULT NULL,
+  `matched_string` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`address`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -57,7 +75,7 @@ CREATE TABLE `IncidentType` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` tinytext,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -68,7 +86,7 @@ DROP TABLE IF EXISTS `Station`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Station` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `name` tinytext NOT NULL,
   `location` tinytext NOT NULL,
   PRIMARY KEY (`id`)
